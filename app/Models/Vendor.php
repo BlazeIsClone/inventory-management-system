@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Vendor extends Model
 {
@@ -18,4 +19,12 @@ class Vendor extends Model
         'name',
         'description',
     ];
+
+    /**
+     * Get the purchase bills for the vendor.
+     */
+    public function purchaseBills(): HasMany
+    {
+        return $this->hasMany(PurchaseBill::class);
+    }
 }

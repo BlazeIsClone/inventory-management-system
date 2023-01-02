@@ -17,14 +17,28 @@ class RawProductResource extends Resource
 {
     protected static ?string $model = RawProduct::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-archive';
+
+    protected static ?string $navigationGroup = 'Purchasing';
+
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->required(),
-                Forms\Components\TextInput::make('unit')->required(),
+                Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\Select::make('unit')
+                    ->options([
+                        'kg ' => 'kilograms',
+                        'g' => 'grams',
+                        'l' => 'liters',
+                        'ml' => 'milliliters',
+                    ])->required(),
             ]);
     }
 
@@ -33,6 +47,7 @@ class RawProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('unit'),
             ])
             ->filters([
                 //
