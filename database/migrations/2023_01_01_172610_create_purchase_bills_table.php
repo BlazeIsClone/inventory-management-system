@@ -17,11 +17,10 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('raw_product_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('price');
             $table->date('purchase_date');
             $table->string('payment_bill')->nullable();
-            $table->string('payment_bill_note')->nullable();
+            $table->longText('payment_bill_note')->nullable();
         });
     }
 

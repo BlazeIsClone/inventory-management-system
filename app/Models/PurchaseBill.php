@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PurchaseBill extends Model
 {
@@ -19,7 +18,6 @@ class PurchaseBill extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'raw_product_id',
         'vendor_id',
         'purchase_date',
         'price',

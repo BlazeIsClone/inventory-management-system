@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RawProductResource\Pages;
-use App\Filament\Resources\RawProductResource\RelationManagers;
 use App\Models\RawProduct;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RawProductResource extends Resource
 {
@@ -28,8 +25,8 @@ class RawProductResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
+        return $form->schema([
+            Forms\Components\Card::make()->schema([
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\Select::make('unit')
@@ -39,15 +36,18 @@ class RawProductResource extends Resource
                         'l' => 'liters',
                         'ml' => 'milliliters',
                     ])->required(),
-            ]);
+            ])
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('unit'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('unit')
+                    ->sortable(),
             ])
             ->filters([
                 //

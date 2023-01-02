@@ -3,17 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PurchaseBillResource\Pages;
-use App\Filament\Resources\PurchaseBillResource\RelationManagers;
 use App\Models\PurchaseBill;
-use App\Models\RawProduct;
-use App\Models\Vendor;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PurchaseBillResource extends Resource
 {
@@ -25,8 +20,8 @@ class PurchaseBillResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
+        return $form->schema([
+            Forms\Components\Card::make()->schema([
                 Forms\Components\Select::make('vendor_id')
                     ->relationship('vendor', 'name')
                     ->required(),
@@ -44,15 +39,22 @@ class PurchaseBillResource extends Resource
                     ->required(),
                 Forms\Components\FileUpload::make('payment_bill'),
                 Forms\Components\Textarea::make('payment_bill_note'),
-            ]);
+            ])
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('purchase_date'),
-                Tables\Columns\TextColumn::make('price'),
+                Tables\Columns\TextColumn::make('purchase_date')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('vendor.name')
+                    ->searchable(),
+                Tables\Columns\TagsColumn::make('rawProducts.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('price')
+                    ->sortable(),
             ])
             ->filters([
                 //
