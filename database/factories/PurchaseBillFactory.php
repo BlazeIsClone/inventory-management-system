@@ -19,7 +19,7 @@ class PurchaseBillFactory extends Factory
         return [
             'vendor_id' => Vendor::factory(),
             'purchase_date' => fake()->date(),
-            'price' => fake()->numberBetween(100, 10_000),
+            'sub_total' => fake()->numberBetween(100, 10_000),
             'payment_bill' => fake()->imageUrl(),
             'payment_bill_note' => fake()->paragraph(),
         ];

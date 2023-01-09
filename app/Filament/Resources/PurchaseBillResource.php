@@ -20,27 +20,20 @@ class PurchaseBillResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
-            Forms\Components\Card::make()->schema([
-                Forms\Components\Select::make('vendor_id')
-                    ->relationship('vendor', 'name')
-                    ->required(),
-                Forms\Components\Select::make('raw_product_id')
-                    ->label('Products')
-                    ->relationship('rawProducts', 'name')
-                    ->multiple()
-                    ->preload()
-                    ->searchable()
-                    ->required(),
-                Forms\Components\DatePicker::make('purchase_date')
-                    ->required(),
-                Forms\Components\TextInput::make('price')
-                    ->numeric()
-                    ->required(),
-                Forms\Components\FileUpload::make('payment_bill'),
-                Forms\Components\Textarea::make('payment_bill_note'),
-            ])
-        ]);
+        return $form
+            ->schema([
+                Forms\Components\Card::make([
+                    Forms\Components\Select::make('vendor_id')
+                        ->relationship('vendor', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                    Forms\Components\DatePicker::make('purchase_date')
+                        ->required(),
+                    Forms\Components\FileUpload::make('payment_bill'),
+                    Forms\Components\Textarea::make('payment_bill_note'),
+                ]),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -53,9 +46,9 @@ class PurchaseBillResource extends Resource
                     ->searchable(),
                 Tables\Columns\TagsColumn::make('rawProducts.name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('price')
+                Tables\Columns\TextColumn::make('sub_total')
                     ->sortable(),
-            ])
+            ])->defaultSort('purchase_date', 'desc')
             ->filters([
                 //
             ])
@@ -70,7 +63,7 @@ class PurchaseBillResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PurchaseBillResource\RelationManagers\RawProductsRelationManager::class,
         ];
     }
 

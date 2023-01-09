@@ -16,6 +16,8 @@ class VendorFactory extends Factory
     {
         return [
             'name' => fake()->unique()->company(),
+            'email' => fake()->email(),
+            'telephone' => fake()->phoneNumber(),
             'description' => fake()->paragraph(),
         ];
     }

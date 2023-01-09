@@ -16,7 +16,7 @@ class RawProductFactory extends Factory
     {
         return [
             'name' => fake()->unique()->word(),
-            'unit' => fake()->randomElement(['ton', 'kg', 'g', 'mg']),
+            'unit' => fake()->randomElement(['kg', 'g', 'l', 'ml']),
         ];
     }
 }

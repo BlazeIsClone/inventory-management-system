@@ -27,8 +27,15 @@ class VendorResource extends Resource
     {
         return $form->schema([
             Forms\Components\Card::make()->schema([
-                Forms\Components\TextInput::make('name')->required(),
-                Forms\Components\Textarea::make('description')->required(),
+                Forms\Components\TextInput::make('name')
+                    ->required(),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->required(),
+                Forms\Components\TextInput::make('telephone')
+                    ->required(),
+                Forms\Components\Textarea::make('description')
+                    ->required(),
             ])
         ]);
     }

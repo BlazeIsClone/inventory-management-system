@@ -14,8 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('purchase_bill_raw_product', function (Blueprint $table) {
-            $table->foreignId('raw_product_id')->constrained();
-            $table->foreignId('purchase_bill_id')->constrained();
+            $table->foreignId('raw_product_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('purchase_bill_id')->constrained()->cascadeOnDelete();
+            $table->integer('product_quantity')->nullable();
+            $table->integer('product_price')->nullable();
         });
     }
 

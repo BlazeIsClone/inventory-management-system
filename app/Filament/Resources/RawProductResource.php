@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RawProductResource\Pages;
+use App\Filament\Widgets\RawProductOverview;
 use App\Models\RawProduct;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -26,17 +27,18 @@ class RawProductResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Card::make()->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\Select::make('unit')
-                    ->options([
-                        'kg ' => 'kilograms',
-                        'g' => 'grams',
-                        'l' => 'liters',
-                        'ml' => 'milliliters',
-                    ])->required(),
-            ])
+            Forms\Components\Card::make()
+                ->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->required(),
+                    Forms\Components\Select::make('unit')
+                        ->options([
+                            'kg' => 'kg',
+                            'g' => 'g',
+                            'l' => 'l',
+                            'ml' => 'ml',
+                        ])->required(),
+                ])
         ]);
     }
 
@@ -73,6 +75,13 @@ class RawProductResource extends Resource
             'index' => Pages\ListRawProducts::route('/'),
             'create' => Pages\CreateRawProduct::route('/create'),
             'edit' => Pages\EditRawProduct::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            RawProductOverview::class,
         ];
     }
 }
