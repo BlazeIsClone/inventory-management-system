@@ -1,10 +1,8 @@
 name: Staging - Build & Push Containers
 
 on:
-  workflow_run:
-    workflows: [Staging - Run Tests]
-    types:
-      - completed
+  push:
+    branches: [staging]
 
 env:
   REGISTRY: ghcr.io
