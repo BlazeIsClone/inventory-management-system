@@ -109,22 +109,6 @@ class RawProductsRelationManager extends RelationManager
                     })
             ])
             ->actions([
-                /** Tables\Actions\EditAction::make()
-                    ->using(function (Model $record, array $data): Model {
-                        $purchaseBill = PurchaseBill::find($record->pivot_purchase_bill_id);
-
-                        if ($purchaseBill->sub_total < $data['product_quantity'] * $data['product_price']) {
-                            $subTotal = $purchaseBill->sub_total += $data['product_quantity'] * $data['product_price'];
-                        } else {
-                            $subTotal = $purchaseBill->sub_total -= $data['product_quantity'] * $data['product_price'];
-                        }
-
-                        $purchaseBill->sub_total = $subTotal;
-                        $purchaseBill->save();
-                        $record->update($data);
-
-                        return $record;
-                    }), */
                 Tables\Actions\DetachAction::make()->after(function (DetachAction $action) {
                     $purchaseBill = PurchaseBill::find($action->getRecord()->pivot_purchase_bill_id);
                     $purchaseBill->sub_total -= $action->getRecord()->product_quantity * $action->getRecord()->product_price;

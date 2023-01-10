@@ -19,10 +19,10 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => 'sandev',
-            'email' => 'sandevabeykoon123@gmail.com',
+            'name' => 'Maya',
+            'email' => 'mayalkdevelopers@gmail.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('sandev123'),
+            'password' => Hash::make('admin@mayalk'),
             'remember_token' => Str::random(10),
         ];
     }
