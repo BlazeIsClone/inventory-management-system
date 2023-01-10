@@ -8,7 +8,10 @@ COPY composer* .
 
 COPY . .
 
-RUN composer install
+RUN chmod -R ug+w storage \
+	&& chmod -R ug+w bootstrap/cache
+
+RUN composer install --optimize-autoloader --no-dev
 
 RUN php artisan optimize
 
