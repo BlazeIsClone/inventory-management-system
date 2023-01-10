@@ -1,0 +1,15 @@
+FROM webdevops/php-nginx:8.1-alpine
+
+ENV WEB_DOCUMENT_ROOT=/app/public
+
+WORKDIR /app
+
+COPY composer* .
+
+COPY . .
+
+RUN composer install
+
+RUN php artisan optimize
+
+RUN chown -R application:application .
