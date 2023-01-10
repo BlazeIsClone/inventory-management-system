@@ -8,6 +8,7 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
         image: sail-8.1/app
+        container_name: ims-laravel
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -23,13 +24,14 @@ services:
         networks:
             - sail
         depends_on:
-            - ims-mysql
+            - mysql
             - redis
             - meilisearch
             - mailhog
             - selenium
-    ims-mysql:
+    mysql:
         image: 'mysql/mysql-server:8.0'
+        container_name: ims-mysql
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
@@ -50,6 +52,7 @@ services:
             timeout: 5s
     redis:
         image: 'redis:alpine'
+        container_name: ims-redis
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
@@ -62,6 +65,7 @@ services:
             timeout: 5s
     meilisearch:
         image: 'getmeili/meilisearch:latest'
+        container_name: ims-meilisearch
         ports:
             - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
         volumes:
@@ -81,6 +85,7 @@ services:
             timeout: 5s
     mailhog:
         image: 'mailhog/mailhog:latest'
+        container_name: ims-mailhog
         ports:
             - '${FORWARD_MAILHOG_PORT:-1025}:1025'
             - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
@@ -88,6 +93,7 @@ services:
             - sail
     selenium:
         image: 'selenium/standalone-chrome'
+        container_name: ims-selenium
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         volumes:
