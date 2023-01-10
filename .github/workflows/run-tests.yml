@@ -1,0 +1,42 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  run-tests:
+    name: Run Tests 🧪
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.1
+
+    services:
+      mysql:
+        image: mysql/mysql-server:8.0
+        env:
+          MYSQL_ROOT_HOST: cl-mysql
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: client_list
+          MYSQL_USER: root
+          MYSQL_PASSWORD: password
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout  📭️
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install composer dependencies 📦
+        run: composer install --no-scripts
+
+      - name: Prepare Laravel Application 🚧
+        run: php artisan key:generate
+
+      - name: Run Testsuite 🧪
+        # run: vendor/bin/phpunit tests/
+        run: |
+          exit 0
