@@ -1,8 +1,8 @@
-name: Build & Push Containers
+name: Staging - Build & Push Containers
 
 on:
   workflow_run:
-    workflows: [Run Tests]
+    workflows: [Staging - Run Tests]
     types:
       - completed
 

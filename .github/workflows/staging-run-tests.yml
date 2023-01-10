@@ -1,8 +1,8 @@
-name: Run Tests
+name: Staging - Run Tests
 
 on:
   push:
-    branches: [main, staging]
+    branches: [staging]
 
 jobs:
   run-tests:
