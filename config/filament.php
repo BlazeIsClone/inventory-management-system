@@ -246,7 +246,7 @@ return [
         'sidebar' => [
             'is_collapsible_on_desktop' => true,
             'groups' => [
-                'are_collapsible' => true,
+                'are_collapsible' => false,
             ],
             'width' => null,
             'collapsed_width' => null,
