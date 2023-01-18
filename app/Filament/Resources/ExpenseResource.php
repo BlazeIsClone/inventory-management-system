@@ -22,7 +22,6 @@ class ExpenseResource extends Resource
     {
         return $form
             ->schema([
-
                 Forms\Components\Card::make([
                     Forms\Components\DatePicker::make('date')
                         ->required(),

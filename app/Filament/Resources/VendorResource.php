@@ -33,6 +33,7 @@ class VendorResource extends Resource
                     ->email()
                     ->required(),
                 Forms\Components\TextInput::make('telephone')
+                    ->tel()
                     ->required(),
                 Forms\Components\Textarea::make('description')
                     ->required(),
