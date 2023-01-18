@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ExpensesCategoryResource\Pages;
-use App\Filament\Resources\ExpensesCategoryResource\RelationManagers;
 use App\Models\ExpenseCategory;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -25,7 +24,7 @@ class ExpensesCategoryResource extends Resource
             ->schema([
                 Forms\Components\Card::make([
                     Forms\Components\TextInput::make('name')
-                        ->unique(),
+                        ->unique(ignorable: fn ($record) => $record),
                     Forms\Components\Toggle::make('is_included_in_total_expenses')
                         ->default(true),
                 ]),
@@ -38,6 +37,8 @@ class ExpensesCategoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->sortable(),
+                Tables\Columns\IconColumn::make('is_included_in_total_expenses')
+                    ->boolean(),
             ])
             ->filters([
                 //

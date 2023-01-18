@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ExpenseResource\Pages;
-use App\Filament\Resources\ExpenseResource\RelationManagers;
 use App\Models\Expense;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExpenseResource extends Resource
 {
