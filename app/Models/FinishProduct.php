@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FinishProduct extends Model
 {
@@ -19,4 +21,12 @@ class FinishProduct extends Model
         'labour_percentage',
         'sales_price',
     ];
+
+    /**
+     * Get the raw products for the finish product.
+     */
+    public function rawProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(RawProduct::class);
+    }
 }

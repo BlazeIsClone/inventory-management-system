@@ -27,13 +27,20 @@ class FinishProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->unique(ignorable: fn ($record) => $record),
-                Forms\Components\Select::make('raw_materials'),
-                Forms\Components\TextInput::make('labour_percentage')
-                    ->numeric(),
-                Forms\Components\TextInput::make('sales_price')
-                    ->numeric(),
+                Forms\Components\Card::make([
+                    Forms\Components\TextInput::make('name')
+                        ->unique(ignorable: fn ($record) => $record),
+                    Forms\Components\Select::make('rawProducts')
+                        ->relationship('rawProducts', 'name')
+                        ->multiple()
+                        ->searchable()
+                        ->preload()
+                        ->required(),
+                    Forms\Components\TextInput::make('labour_percentage')
+                        ->numeric(),
+                    Forms\Components\TextInput::make('sales_price')
+                        ->numeric(),
+                ])
             ]);
     }
 
@@ -43,6 +50,8 @@ class FinishProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->sortable(),
+                Tables\Columns\TagsColumn::make('rawProducts.name'),
+                Tables\Columns\TextColumn::make('labour_percentage'),
                 Tables\Columns\TextColumn::make('sales_price')
                     ->sortable(),
             ])
