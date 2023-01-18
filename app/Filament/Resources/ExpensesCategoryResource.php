@@ -24,7 +24,10 @@ class ExpensesCategoryResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Card::make([
-                    Forms\Components\TextInput::make('name'),
+                    Forms\Components\TextInput::make('name')
+                        ->unique(),
+                    Forms\Components\Toggle::make('is_included_in_total_expenses')
+                        ->default(true),
                 ]),
             ]);
     }

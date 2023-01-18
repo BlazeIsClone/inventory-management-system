@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('expense_category_id')->constrained()->cascadeOnDelete();
             $table->integer('amount');
             $table->longText('description')->nullable();
+            $table->string('payment_bill')->nullable();
         });
     }
 

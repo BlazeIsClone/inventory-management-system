@@ -17,6 +17,7 @@ class ExpenseCategory extends Model
      */
     protected $fillable = [
         'name',
+        'is_included_in_total_expenses',
     ];
 
     /**

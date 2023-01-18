@@ -36,6 +36,7 @@ class ExpenseResource extends Resource
                         ->required(),
                     Forms\Components\TextInput::make('amount')->numeric(),
                     Forms\Components\Textarea::make('description')->nullable(),
+                    Forms\Components\FileUpload::make('payment_bill')->nullable(),
                 ]),
             ]);
     }
@@ -47,7 +48,7 @@ class ExpenseResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->sortable(),
                 Tables\Columns\BadgeColumn::make('expenseCategory.name'),
-                Tables\Columns\BadgeColumn::make('amount')
+                Tables\Columns\TextColumn::make('amount')
                     ->sortable(),
             ])
             ->filters([

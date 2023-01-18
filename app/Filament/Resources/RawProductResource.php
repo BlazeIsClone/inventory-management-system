@@ -34,9 +34,7 @@ class RawProductResource extends Resource
                     Forms\Components\Select::make('unit')
                         ->options([
                             'kg' => 'kg',
-                            'g' => 'g',
                             'l' => 'l',
-                            'ml' => 'ml',
                         ])->required(),
                 ])
         ]);
