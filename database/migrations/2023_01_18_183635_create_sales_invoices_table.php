@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('sales_invoices', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('invoice_number');
+            $table->string('invoice_number')->unique();
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->dateTime('date');
             $table->string('payment_type');

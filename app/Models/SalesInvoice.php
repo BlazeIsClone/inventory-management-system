@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class SalesInvoice extends Model
 {
@@ -32,5 +33,13 @@ class SalesInvoice extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Get the customer for the sales invoice.
+     */
+    public function finishProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(FinishProduct::class);
     }
 }

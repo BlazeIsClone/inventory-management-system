@@ -3,21 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SalesInvoiceResource\Pages;
-use App\Filament\Resources\SalesInvoiceResource\RelationManagers;
 use App\Models\SalesInvoice;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SalesInvoiceResource extends Resource
 {
     protected static ?string $model = SalesInvoice::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-document-report';
 
     protected static ?string $navigationGroup = 'Sales';
 
@@ -27,7 +24,9 @@ class SalesInvoiceResource extends Resource
             ->schema([
                 Forms\Components\Card::make([
                     Forms\Components\TextInput::make('invoice_number')
-                        ->numeric()
+                        ->default('INV-' . random_int(100_000, 999_999))
+                        ->unique(ignorable: fn ($record) => $record)
+                        ->disabled()
                         ->required(),
                     Forms\Components\Select::make('customer_id')
                         ->relationship('customer', 'name')
@@ -46,6 +45,18 @@ class SalesInvoiceResource extends Resource
                             'pending' => 'Pending',
                             'paid' => 'Paid',
                         ])->required(),
+                    Forms\Components\Select::make('finishProducts')
+                        ->relationship('finishProducts', 'name')
+                        ->searchable()
+                        ->multiple()
+                        ->preload()
+                        ->required(),
+                    Forms\Components\TextInput::make('discount')
+                        ->numeric(),
+                ]),
+                Forms\Components\Card::make([
+                    Forms\Components\FileUpload::make('receipt'),
+                    Forms\Components\Textarea::make('invoice_notes'),
                 ]),
 
             ]);
@@ -55,7 +66,20 @@ class SalesInvoiceResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('invoice_number')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('customer.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('date')
+                    ->searchable(),
+                Tables\Columns\BadgeColumn::make('payment_type')
+                    ->searchable(),
+                Tables\Columns\BadgeColumn::make('payment_status')
+                    ->colors([
+                        'warning' => 'pending',
+                        'success' => 'paid',
+                    ])
+                    ->searchable(),
             ])
             ->filters([
                 //
