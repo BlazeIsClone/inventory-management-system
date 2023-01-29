@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class PurchaseBillRawProduct extends Model
+class FinishProductSalesInvoice extends Model
 {
     use HasFactory;
 
@@ -17,10 +15,9 @@ class PurchaseBillRawProduct extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'raw_product_id',
-        'purchase_bill_id',
-        'product_quantity',
-        'product_price',
-        'product_total',
+        'finish_product_id',
+        'sales_invoice_id',
+        'finish_product_quantity',
+        'finish_product_price',
     ];
 }

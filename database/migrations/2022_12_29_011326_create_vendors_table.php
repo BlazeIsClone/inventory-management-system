@@ -15,11 +15,13 @@ return new class extends Migration
     {
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
             $table->string('name')->unique();
             $table->string('telephone')->nullable();
             $table->string('email')->nullable();
-            $table->longText('description');
+            $table->longText('description')->nullable();
+
+            $table->timestamps();
         });
     }
 

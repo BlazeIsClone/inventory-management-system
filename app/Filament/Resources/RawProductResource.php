@@ -30,7 +30,7 @@ class RawProductResource extends Resource
             Forms\Components\Card::make()
                 ->schema([
                     Forms\Components\TextInput::make('name')
-                        ->required(),
+                        ->unique(ignorable: fn ($record) => $record),
                     Forms\Components\Select::make('unit')
                         ->options([
                             'kg' => 'kg',
@@ -54,6 +54,7 @@ class RawProductResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

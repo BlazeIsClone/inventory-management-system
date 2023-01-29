@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('finish_products', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->integer('labour_percentage')->nullable();
             $table->integer('sales_price');
         });

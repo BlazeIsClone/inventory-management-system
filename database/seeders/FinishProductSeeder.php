@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\RawProduct;
+use App\Models\FinishProduct;
 use Illuminate\Database\Seeder;
 
-class RawProductSeeder extends Seeder
+class FinishProductSeeder extends Seeder
 {
     /**
      * Seed raw products to the database.
      */
     public function run(): void
     {
-        RawProduct::factory(150)->create();
+        FinishProduct::factory(50)->create();
     }
 }

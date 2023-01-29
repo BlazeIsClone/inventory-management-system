@@ -42,6 +42,7 @@ class ProductionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('date')
+                    ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('finishProduct.name'),
                 Tables\Columns\TextColumn::make('quantity'),

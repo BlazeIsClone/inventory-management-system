@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\FinishProductResource\Pages;
 use App\Models\FinishProduct;
+use App\Models\RawProduct;
+use Closure;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -29,18 +31,36 @@ class FinishProductResource extends Resource
             ->schema([
                 Forms\Components\Card::make([
                     Forms\Components\TextInput::make('name')
-                        ->unique(ignorable: fn ($record) => $record),
-                    Forms\Components\Select::make('rawProducts')
-                        ->relationship('rawProducts', 'name')
-                        ->multiple()
-                        ->searchable()
-                        ->preload()
+                        ->unique(ignorable: fn ($record) => $record)
                         ->required(),
                     Forms\Components\TextInput::make('labour_percentage')
                         ->numeric(),
                     Forms\Components\TextInput::make('sales_price')
-                        ->numeric(),
-                ])
+                        ->numeric()
+                        ->required(),
+                ]),
+                Forms\Components\Card::make([
+                    Forms\Components\Repeater::make('finishProductRawProducts')
+                        ->label('Add Raw Product')
+                        ->relationship()
+                        ->defaultItems(1)
+                        ->columns(3)
+                        ->schema([
+                            Forms\Components\Select::make('raw_product_id')
+                                ->options(RawProduct::query()->pluck('name', 'id'))
+                                ->searchable()
+                                ->preload()
+                                ->columnSpan(2)
+                                ->required(),
+                            Forms\Components\TextInput::make('raw_product_quantity')
+                                ->numeric()
+                                ->minValue(1)
+                                ->default(1)
+                                ->columnSpan(1)
+                                ->required(),
+                        ]),
+                ]),
+
             ]);
     }
 
@@ -50,7 +70,7 @@ class FinishProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->sortable(),
-                Tables\Columns\TagsColumn::make('rawProducts.name'),
+                //Tables\Columns\TagsColumn::make('finishProductRawProducts.name'),
                 Tables\Columns\TextColumn::make('labour_percentage'),
                 Tables\Columns\TextColumn::make('sales_price')
                     ->sortable(),

@@ -21,10 +21,10 @@ class RawProduct extends Model
     ];
 
     /**
-     * Get the purchase bill for the raw product.
+     * Get the finished products belongs to raw products.
      */
-    public function purchaseBills(): BelongsToMany
+    public function finshProducts(): BelongsToMany
     {
-        return $this->belongsToMany(PurchaseBill::class);
+        return $this->belongsToMany(FinishProduct::class);
     }
 }

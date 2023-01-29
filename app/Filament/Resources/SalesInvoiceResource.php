@@ -3,12 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SalesInvoiceResource\Pages;
+use App\Models\FinishProduct;
 use App\Models\SalesInvoice;
+use Closure;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Model;
 
 class SalesInvoiceResource extends Resource
 {
@@ -45,20 +48,56 @@ class SalesInvoiceResource extends Resource
                             'pending' => 'Pending',
                             'paid' => 'Paid',
                         ])->required(),
-                    Forms\Components\Select::make('finishProducts')
-                        ->relationship('finishProducts', 'name')
-                        ->searchable()
-                        ->multiple()
-                        ->preload()
-                        ->required(),
                     Forms\Components\TextInput::make('discount')
                         ->numeric(),
+                ]),
+                Forms\Components\Card::make([
+                    Forms\Components\Repeater::make('finishProductSalesInvoice')
+                        ->label('Add Finish Product')
+                        ->defaultItems(1)
+                        ->relationship()
+                        ->columns(6)
+                        ->schema([
+                            Forms\Components\Select::make('finish_product_id')
+                                ->label('Finish Product')
+                                ->options(FinishProduct::query()->pluck('name', 'id'))
+                                ->searchable()
+                                ->preload()
+                                ->reactive()
+                                ->columnSpan(3)
+                                ->afterStateUpdated(function (Closure $set, $state, Closure $get) {
+                                    $finishProduct = FinishProduct::find($state);
+                                    $set('finish_product_id', $state);
+
+                                    if ($finishProduct) {
+                                        $set('finish_product_price', $get('finish_product_quantity') * $finishProduct->sales_price);
+                                    }
+                                })->required(),
+                            Forms\Components\Hidden::make('finish_product_id'),
+                            Forms\Components\TextInput::make('finish_product_quantity')
+                                ->numeric()
+                                ->minValue(1)
+                                ->default(1)
+                                ->reactive()
+                                ->columnSpan(1)
+                                ->afterStateUpdated(function (Closure $get, Closure $set) {
+                                    $finishProduct = FinishProduct::find($get('product_id') || $get('finish_product_id'));
+
+                                    if ($finishProduct) {
+                                        $set('finish_product_price', $get('finish_product_quantity') * $finishProduct->sales_price);
+                                    }
+                                })->required(),
+                            Forms\Components\TextInput::make('finish_product_price')
+                                ->reactive()
+                                ->disabled()
+                                ->columnSpan(2)
+                                ->required(),
+                        ]),
                 ]),
                 Forms\Components\Card::make([
                     Forms\Components\FileUpload::make('receipt'),
                     Forms\Components\Textarea::make('invoice_notes'),
                 ]),
-
             ]);
     }
 
@@ -71,15 +110,23 @@ class SalesInvoiceResource extends Resource
                 Tables\Columns\TextColumn::make('customer.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('date')
+                    ->date()
                     ->searchable(),
-                Tables\Columns\BadgeColumn::make('payment_type')
-                    ->searchable(),
+                Tables\Columns\BadgeColumn::make('payment_type'),
                 Tables\Columns\BadgeColumn::make('payment_status')
                     ->colors([
                         'warning' => 'pending',
                         'success' => 'paid',
-                    ])
-                    ->searchable(),
+                    ]),
+                Tables\Columns\TextColumn::make('sub_total')
+                    ->getStateUsing(function (Model $record) {
+                        $items = [];
+                        foreach ($record->finishProductSalesInvoice as $finishProduct) {
+                            $items[] = ($finishProduct->finish_product_price * $finishProduct->finish_product_quantity)
+                                - $record->discount;
+                        }
+                        return array_sum($items);
+                    }),
             ])
             ->filters([
                 //

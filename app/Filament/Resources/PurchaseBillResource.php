@@ -4,11 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PurchaseBillResource\Pages;
 use App\Models\PurchaseBill;
+use App\Models\RawProduct;
+use Closure;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Model;
 
 class PurchaseBillResource extends Resource
 {
@@ -32,6 +35,51 @@ class PurchaseBillResource extends Resource
                         ->required(),
                     Forms\Components\FileUpload::make('payment_bill'),
                     Forms\Components\Textarea::make('payment_bill_note'),
+
+                ]),
+                Forms\Components\Card::make([
+                    Forms\Components\Repeater::make('purchaseBillRawProducts')
+                        ->label('Add Raw Product')
+                        ->relationship()
+                        ->defaultItems(1)
+                        ->columns(6)
+                        ->schema([
+                            Forms\Components\Select::make('raw_product_id')
+                                ->options(RawProduct::query()->pluck('name', 'id'))
+                                ->required()
+                                ->searchable()
+                                ->columnSpan(2)
+                                ->reactive()
+                                ->afterStateUpdated(function (Closure $set, Closure $get, $state) {
+                                    $set('product_total', $state * $get('product_price'));
+                                }),
+                            Forms\Components\TextInput::make('product_quantity')
+                                ->required()
+                                ->numeric()
+                                ->minValue(1)
+                                ->maxLength(255)
+                                ->columnSpan(1)
+                                ->reactive()
+                                ->afterStateUpdated(function (Closure $set, Closure $get, $state) {
+                                    $set('product_total', $state * $get('product_price'));
+                                }),
+                            Forms\Components\TextInput::make('product_price')
+                                ->required()
+                                ->numeric()
+                                ->minValue(1)
+                                ->maxLength(255)
+                                ->columnSpan(2)
+                                ->reactive()
+                                ->afterStateUpdated(function (Closure $set, Closure $get, $state) {
+                                    $set('product_total', $get('product_quantity') * $state);
+                                }),
+                            Forms\Components\TextInput::make('product_total')
+                                ->disabled()
+                                ->numeric()
+                                ->maxLength(255)
+                                ->dehydrated()
+                                ->columnSpan(1),
+                        ])
                 ]),
             ]);
     }
@@ -41,13 +89,18 @@ class PurchaseBillResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('purchase_date')
+                    ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('vendor.name')
                     ->searchable(),
-                Tables\Columns\TagsColumn::make('rawProducts.name')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('sub_total')
-                    ->sortable(),
+                    ->getStateUsing(function (Model $record) {
+                        $items = [];
+                        foreach ($record->purchaseBillRawProducts as $purchaseBill) {
+                            $items[] = $purchaseBill->product_price * $purchaseBill->product_quantity;
+                        }
+                        return array_sum($items);
+                    }),
             ])->defaultSort('purchase_date', 'desc')
             ->filters([
                 //
@@ -63,7 +116,7 @@ class PurchaseBillResource extends Resource
     public static function getRelations(): array
     {
         return [
-            PurchaseBillResource\RelationManagers\RawProductsRelationManager::class,
+            //PurchaseBillResource\RelationManagers\RawProductsRelationManager::class,
         ];
     }
 

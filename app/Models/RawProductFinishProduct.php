@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class PurchaseBillRawProduct extends Model
+class RawProductFinishProduct extends Model
 {
     use HasFactory;
 
@@ -18,9 +16,7 @@ class PurchaseBillRawProduct extends Model
      */
     protected $fillable = [
         'raw_product_id',
-        'purchase_bill_id',
-        'product_quantity',
-        'product_price',
-        'product_total',
+        'finish_product_id',
+        'raw_product_quantity',
     ];
 }

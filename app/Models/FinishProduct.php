@@ -25,8 +25,8 @@ class FinishProduct extends Model
     /**
      * Get the raw products for the finish product.
      */
-    public function rawProducts(): BelongsToMany
+    public function finishProductRawProducts(): HasMany
     {
-        return $this->belongsToMany(RawProduct::class);
+        return $this->hasMany(RawProductFinishProduct::class);
     }
 }

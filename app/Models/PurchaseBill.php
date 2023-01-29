@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PurchaseBill extends Model
 {
@@ -39,5 +40,13 @@ class PurchaseBill extends Model
     {
         return $this->belongsToMany(RawProduct::class)
             ->withPivot('product_quantity', 'product_price');
+    }
+
+    /**
+     * Get the raw products for the purchase bill.
+     */
+    public function purchaseBillRawProducts(): HasMany
+    {
+        return $this->hasMany(PurchaseBillRawProduct::class);
     }
 }

@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('purchase_bill_raw_product', function (Blueprint $table) {
+        Schema::create('raw_product_finish_products', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
             $table->foreignId('raw_product_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('purchase_bill_id')->constrained()->cascadeOnDelete();
-            $table->integer('product_quantity')->nullable();
-            $table->integer('product_price')->nullable();
+            $table->foreignId('finish_product_id')->constrained()->cascadeOnDelete();
+            $table->integer('raw_product_quantity');
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchase_bill_raw_product');
+        Schema::dropIfExists('finish_product_raw_products');
     }
 };

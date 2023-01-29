@@ -18,11 +18,6 @@ class VendorResource extends Resource
 
     protected static ?string $navigationGroup = 'Purchasing';
 
-    protected static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
-
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -30,13 +25,10 @@ class VendorResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required(),
+                    ->email(),
                 Forms\Components\TextInput::make('telephone')
-                    ->tel()
-                    ->required(),
-                Forms\Components\Textarea::make('description')
-                    ->required(),
+                    ->tel(),
+                Forms\Components\Textarea::make('description'),
             ])
         ]);
     }
