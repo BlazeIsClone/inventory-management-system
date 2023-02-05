@@ -21,6 +21,8 @@ class PurchaseBillResource extends Resource
 
     protected static ?string $navigationGroup = 'Purchasing';
 
+    protected static ?int $navigationSort = 7;
+
     public static function form(Form $form): Form
     {
         return $form

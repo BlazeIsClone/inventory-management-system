@@ -9,19 +9,19 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class TotalSales extends Page implements HasTable
+class CashInHand extends Page implements HasTable
 {
     use InteractsWithTable;
 
-    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static ?string $navigationIcon = 'heroicon-o-cash';
 
     protected static ?string $navigationGroup = 'Records';
 
-    protected static ?string $title = 'Total Sales';
+    protected static ?string $title = 'Cash in Hand';
 
-    protected static string $view = 'filament.pages.total-sales';
+    protected static string $view = 'filament.pages.cash-in-hand';
 
-    protected static ?int $navigationSort = 0;
+    protected static ?int $navigationSort = 1;
 
 
     protected function getTableQuery(): Builder
@@ -32,8 +32,10 @@ class TotalSales extends Page implements HasTable
     protected function getTableColumns(): array
     {
         return [
-            Tables\Columns\TextColumn::make('total_sold'),
-            Tables\Columns\TextColumn::make('sales_amount'),
+            Tables\Columns\TextColumn::make('monthly_brought_forward'),
+            Tables\Columns\TextColumn::make('total_sales'),
+            Tables\Columns\TextColumn::make('total_expenditure'),
+            Tables\Columns\TextColumn::make('total'),
         ];
     }
 }

@@ -20,6 +20,8 @@ class FinishProductResource extends Resource
 
     protected static ?string $navigationGroup = 'Production';
 
+    protected static ?int $navigationSort = 8;
+
     protected static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();

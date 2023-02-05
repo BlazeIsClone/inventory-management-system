@@ -19,6 +19,8 @@ class RawProductResource extends Resource
 
     protected static ?string $navigationGroup = 'Purchasing';
 
+    protected static ?int $navigationSort = 5;
+
     protected static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
@@ -31,6 +33,8 @@ class RawProductResource extends Resource
                 ->schema([
                     Forms\Components\TextInput::make('name')
                         ->unique(ignorable: fn ($record) => $record),
+                    Forms\Components\TextInput::make('available_quantity')
+                        ->default(0),
                     Forms\Components\Select::make('unit')
                         ->options([
                             'kg' => 'kg',
@@ -46,6 +50,7 @@ class RawProductResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('available_quantity'),
                 Tables\Columns\TextColumn::make('unit')
                     ->sortable(),
             ])

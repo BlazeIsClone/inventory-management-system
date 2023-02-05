@@ -2,17 +2,17 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\RawProduct;
+use App\Models\Vendor;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
 
 
-class RawProductOverview extends BaseWidget
+class VendorOverview extends BaseWidget
 {
     protected function getCards(): array
     {
         return [
-            Card::make('Raw Products Types', RawProduct::count()),
+            Card::make('Vendors', Vendor::count()),
         ];
     }
 }

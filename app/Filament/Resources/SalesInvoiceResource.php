@@ -21,6 +21,8 @@ class SalesInvoiceResource extends Resource
 
     protected static ?string $navigationGroup = 'Sales';
 
+    protected static ?int $navigationSort = 11;
+
     public static function form(Form $form): Form
     {
         return $form

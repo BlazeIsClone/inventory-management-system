@@ -18,6 +18,7 @@ class RawProduct extends Model
     protected $fillable = [
         'name',
         'unit',
+        'available_quantity',
     ];
 
     /**

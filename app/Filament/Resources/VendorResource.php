@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VendorResource\Pages;
+use App\Filament\Widgets\VendorOverview;
 use App\Models\Vendor;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -17,6 +18,8 @@ class VendorResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $navigationGroup = 'Purchasing';
+
+    protected static ?int $navigationSort = 6;
 
     public static function form(Form $form): Form
     {
@@ -65,6 +68,13 @@ class VendorResource extends Resource
             'index' => Pages\ListVendors::route('/'),
             'create' => Pages\CreateVendor::route('/create'),
             'edit' => Pages\EditVendor::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            VendorOverview::class,
         ];
     }
 }

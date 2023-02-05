@@ -15,11 +15,10 @@ return new class extends Migration
     {
         Schema::create('raw_products', function (Blueprint $table) {
             $table->id();
-
+            $table->timestamps();
             $table->string('name')->unique();
             $table->string('unit')->nullable();
-
-            $table->timestamps();
+            $table->integer('available_quantity')->default(0);
         });
     }
 

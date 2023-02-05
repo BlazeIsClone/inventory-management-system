@@ -18,6 +18,8 @@ class ExpensesCategoryResource extends Resource
 
     protected static ?string $navigationGroup = 'Expenditure';
 
+    protected static ?int $navigationSort = 12;
+
     public static function form(Form $form): Form
     {
         return $form

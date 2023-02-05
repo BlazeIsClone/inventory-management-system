@@ -15,14 +15,11 @@ return new class extends Migration
     {
         Schema::create('purchase_bills', function (Blueprint $table) {
             $table->id();
-
+            $table->timestamps();
             $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
-
             $table->date('purchase_date');
             $table->string('payment_bill')->nullable();
             $table->longText('payment_bill_note')->nullable();
-
-            $table->timestamps();
         });
     }
 
