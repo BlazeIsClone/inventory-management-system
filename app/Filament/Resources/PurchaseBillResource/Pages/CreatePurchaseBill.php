@@ -3,12 +3,15 @@
 namespace App\Filament\Resources\PurchaseBillResource\Pages;
 
 use App\Filament\Resources\PurchaseBillResource;
+use App\Filament\Widgets\PurchaseBillSubTotalOverview;
 use App\Models\RawProduct;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePurchaseBill extends CreateRecord
 {
     protected static string $resource = PurchaseBillResource::class;
+
+    protected $items = [];
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

@@ -14,7 +14,14 @@ class EditPurchaseBill extends EditRecord
     protected function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->before(function () {
+                    foreach ($this->data['purchaseBillRawProducts'] as $row) {
+                        $rawProduct = RawProduct::find($row['raw_product_id']);
+                        $rawProduct->available_quantity -= $row['product_quantity'];
+                        $rawProduct->save();
+                    };
+                }),
         ];
     }
     protected function mutateFormDataBeforeSave(array $data): array

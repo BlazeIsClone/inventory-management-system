@@ -77,10 +77,14 @@ class PurchaseBillResource extends Resource
                                 }),
                             Forms\Components\TextInput::make('product_total')
                                 ->disabled()
+                                ->reactive()
                                 ->numeric()
                                 ->dehydrated()
-                                ->columnSpan(1),
-                        ])
+                                ->columnSpan(1)
+                                ->afterStateUpdated(function (Closure $set, Closure $get, $state) {
+                                    $set('product_total', $get('product_quantity') * $state);
+                                }),
+                        ]),
                 ]),
             ]);
     }
@@ -109,16 +113,12 @@ class PurchaseBillResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ->bulkActions([]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            //PurchaseBillResource\RelationManagers\RawProductsRelationManager::class,
-        ];
+        return [];
     }
 
     public static function getPages(): array
