@@ -26,15 +26,20 @@ class ExpenseResource extends Resource
             ->schema([
                 Forms\Components\Card::make([
                     Forms\Components\DatePicker::make('date')
-                        ->required(),
+                        ->required()
+                        ->default(now()),
                     Forms\Components\Select::make('expense_category_id')
                         ->relationship('expenseCategory', 'name')
                         ->searchable()
                         ->preload()
                         ->required(),
-                    Forms\Components\TextInput::make('amount')->numeric(),
-                    Forms\Components\Textarea::make('description')->nullable(),
-                    Forms\Components\FileUpload::make('payment_bill')->nullable(),
+                    Forms\Components\TextInput::make('amount')
+                        ->minValue(0)
+                        ->numeric(),
+                    Forms\Components\Textarea::make('description')
+                        ->nullable(),
+                    Forms\Components\FileUpload::make('payment_bill')
+                        ->nullable(),
                 ]),
             ]);
     }

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VendorResource\Pages;
+use App\Filament\Widgets\TimestampsOverview;
 use App\Filament\Widgets\VendorOverview;
 use App\Models\Vendor;
 use Filament\Forms;
@@ -75,6 +76,7 @@ class VendorResource extends Resource
     {
         return [
             VendorOverview::class,
+            TimestampsOverview::class,
         ];
     }
 }

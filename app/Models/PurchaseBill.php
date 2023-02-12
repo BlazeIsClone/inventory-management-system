@@ -36,15 +36,6 @@ class PurchaseBill extends Model
     /**
      * Get the raw products for the purchase bill.
      */
-    public function rawProducts(): BelongsToMany
-    {
-        return $this->belongsToMany(RawProduct::class)
-            ->withPivot('product_quantity', 'product_price');
-    }
-
-    /**
-     * Get the raw products for the purchase bill.
-     */
     public function purchaseBillRawProducts(): HasMany
     {
         return $this->hasMany(PurchaseBillRawProduct::class);

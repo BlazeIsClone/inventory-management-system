@@ -39,7 +39,8 @@ class SalesInvoiceResource extends Resource
                         ->preload()
                         ->required(),
                     Forms\Components\DatePicker::make('date')
-                        ->required(),
+                        ->required()
+                        ->default(now()),
                     Forms\Components\Select::make('payment_type')
                         ->options([
                             'cash' => 'Cash',
@@ -51,11 +52,13 @@ class SalesInvoiceResource extends Resource
                             'paid' => 'Paid',
                         ])->required(),
                     Forms\Components\TextInput::make('discount')
-                        ->numeric(),
+                        ->numeric()
+                        ->minValue(0),
                 ]),
                 Forms\Components\Card::make([
                     Forms\Components\Repeater::make('finishProductSalesInvoice')
-                        ->label('Add Finish Product')
+                        ->label('Finish Product')
+                        ->disabledOn(Pages\EditSalesInvoice::class)
                         ->defaultItems(1)
                         ->relationship()
                         ->columns(6)

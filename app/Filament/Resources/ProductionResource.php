@@ -26,14 +26,17 @@ class ProductionResource extends Resource
             ->schema([
                 Forms\Components\Card::make([
                     Forms\Components\DatePicker::make('date')
-                        ->required(),
+                        ->required()
+                        ->default(now()),
                     Forms\Components\Select::make('finish_product_id')
                         ->relationship('finishProduct', 'name')
                         ->searchable()
                         ->preload()
                         ->required(),
                     Forms\Components\TextInput::make('quantity')
+                        ->disabledOn(Pages\EditProduction::class)
                         ->numeric()
+                        ->minValue(1)
                         ->required(),
                 ])
             ]);
@@ -47,7 +50,7 @@ class ProductionResource extends Resource
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('finishProduct.name'),
-                Tables\Columns\TextColumn::make('quantity'),
+                Tables\Columns\TextColumn::make('quantity')
             ])
             ->filters([
                 //

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('labour_percentage')->nullable();
             $table->integer('sales_price');
+            $table->integer('available_quantity')->default(0);
         });
     }
 

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerResource\Pages;
+use App\Filament\Widgets\TimestampsOverview;
 use App\Models\Customer;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -67,6 +68,13 @@ class CustomerResource extends Resource
             'index' => Pages\ListCustomers::route('/'),
             'create' => Pages\CreateCustomer::route('/create'),
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            TimestampsOverview::class,
         ];
     }
 }

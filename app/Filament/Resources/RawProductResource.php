@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RawProductResource\Pages;
 use App\Filament\Widgets\RawProductOverview;
+use App\Filament\Widgets\RawProductQuantityOverview;
+use App\Filament\Widgets\TimestampsOverview;
 use App\Models\RawProduct;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -33,10 +35,9 @@ class RawProductResource extends Resource
                 ->schema([
                     Forms\Components\TextInput::make('name')
                         ->unique(ignorable: fn ($record) => $record),
-                    Forms\Components\TextInput::make('available_quantity')
-                        ->default(0),
                     Forms\Components\Select::make('unit')
                         ->options([
+                            'unit' => 'Unit',
                             'kg' => 'kg',
                             'l' => 'l',
                         ])->required(),
@@ -86,6 +87,8 @@ class RawProductResource extends Resource
     {
         return [
             RawProductOverview::class,
+            RawProductQuantityOverview::class,
+            TimestampsOverview::class,
         ];
     }
 }

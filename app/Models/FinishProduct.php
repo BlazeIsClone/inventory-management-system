@@ -20,6 +20,7 @@ class FinishProduct extends Model
         'name',
         'labour_percentage',
         'sales_price',
+        'available_quantity',
     ];
 
     /**
@@ -28,5 +29,14 @@ class FinishProduct extends Model
     public function finishProductRawProducts(): HasMany
     {
         return $this->hasMany(RawProductFinishProduct::class);
+    }
+
+    public function getRawProductName()
+    {
+        $names = [];
+        foreach ($this->finishProductRawProducts as $item) {;
+            $names[] = RawProduct::find($item->raw_product_id)->value('name');
+        }
+        return $names;
     }
 }

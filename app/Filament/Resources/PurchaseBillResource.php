@@ -34,14 +34,16 @@ class PurchaseBillResource extends Resource
                         ->preload()
                         ->required(),
                     Forms\Components\DatePicker::make('purchase_date')
-                        ->required(),
+                        ->required()
+                        ->default(now()),
                     Forms\Components\FileUpload::make('payment_bill'),
                     Forms\Components\Textarea::make('payment_bill_note'),
 
                 ]),
                 Forms\Components\Card::make([
                     Forms\Components\Repeater::make('purchaseBillRawProducts')
-                        ->label('Add Raw Product')
+                        ->label('Raw Products')
+                        ->disabledOn(Pages\EditPurchaseBill::class)
                         ->relationship()
                         ->defaultItems(1)
                         ->columns(6)
@@ -59,7 +61,6 @@ class PurchaseBillResource extends Resource
                                 ->required()
                                 ->numeric()
                                 ->minValue(1)
-                                ->maxLength(255)
                                 ->columnSpan(1)
                                 ->reactive()
                                 ->afterStateUpdated(function (Closure $set, Closure $get, $state) {
@@ -69,7 +70,6 @@ class PurchaseBillResource extends Resource
                                 ->required()
                                 ->numeric()
                                 ->minValue(1)
-                                ->maxLength(255)
                                 ->columnSpan(2)
                                 ->reactive()
                                 ->afterStateUpdated(function (Closure $set, Closure $get, $state) {
@@ -78,7 +78,6 @@ class PurchaseBillResource extends Resource
                             Forms\Components\TextInput::make('product_total')
                                 ->disabled()
                                 ->numeric()
-                                ->maxLength(255)
                                 ->dehydrated()
                                 ->columnSpan(1),
                         ])
