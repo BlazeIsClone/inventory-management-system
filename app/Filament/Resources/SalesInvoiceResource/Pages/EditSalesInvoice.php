@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\SalesInvoiceResource\Pages;
 
 use App\Filament\Resources\SalesInvoiceResource;
+use App\Filament\Widgets\SalesInvoiceSubTotalOverview;
+use App\Filament\Widgets\TimestampsOverview;
 use App\Models\FinishProduct;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -22,6 +24,13 @@ class EditSalesInvoice extends EditRecord
                         $finishProduct->save();
                     };
                 }),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            SalesInvoiceSubTotalOverview::class,
         ];
     }
 }

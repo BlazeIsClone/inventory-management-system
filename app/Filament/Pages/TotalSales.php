@@ -34,7 +34,8 @@ class TotalSales extends Page implements HasTable
     protected function getTableColumns(): array
     {
         return [
-            Tables\Columns\TextColumn::make('name'),
+            Tables\Columns\TextColumn::make('name')
+                ->searchable(),
             Tables\Columns\TextColumn::make('total_sold')
                 ->getStateUsing(function (Model $record) {
                     $finishProductsSold = 0;
