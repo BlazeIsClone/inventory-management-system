@@ -2,12 +2,14 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\FinishProduct;
 use Filament\Pages\Page;
-use App\Models\RawProduct;
+use App\Models\SalesInvoice;
 use Filament\Tables;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class TotalSales extends Page implements HasTable
 {
@@ -26,14 +28,40 @@ class TotalSales extends Page implements HasTable
 
     protected function getTableQuery(): Builder
     {
-        return RawProduct::query();
+        return FinishProduct::query();
     }
 
     protected function getTableColumns(): array
     {
         return [
-            Tables\Columns\TextColumn::make('total_sold'),
-            Tables\Columns\TextColumn::make('sales_amount'),
+            Tables\Columns\TextColumn::make('name'),
+            Tables\Columns\TextColumn::make('total_sold')
+                ->getStateUsing(function (Model $record) {
+                    $finishProductsSold = 0;
+                    $salesInvoices = SalesInvoice::all();
+                    foreach ($salesInvoices as $salesInvoice) {
+                        foreach ($salesInvoice->finishProductSalesInvoice as $pivot) {
+                            if ($record->id === $pivot->finish_product_id) {
+                                $finishProductsSold += $pivot->finish_product_quantity;
+                            }
+                        }
+                    }
+                    return $finishProductsSold;
+                }),
+            Tables\Columns\TextColumn::make('sales_amount')
+                ->getStateUsing(function (Model $record) {
+                    $finishProductsSold = 0;
+                    $salesInvoices = SalesInvoice::all();
+                    foreach ($salesInvoices as $salesInvoice) {
+                        foreach ($salesInvoice->finishProductSalesInvoice as $pivot) {
+                            if ($record->id === $pivot->finish_product_id) {
+                                $finishProductsSold += $pivot->finish_product_quantity * $pivot->finish_product_price;
+                            }
+                        }
+                    }
+
+                    return $finishProductsSold;
+                }),
         ];
     }
 }

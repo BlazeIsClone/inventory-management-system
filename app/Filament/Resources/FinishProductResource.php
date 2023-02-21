@@ -79,11 +79,10 @@ class FinishProductResource extends Resource
                     ->sortable(),
                 Tables\Columns\TagsColumn::make('raw_products')
                     ->getStateUsing(function (Model $record) {
-                        $names = [];
                         foreach ($record->finishProductRawProducts as $item) {;
-                            $names[] = RawProduct::find($item->raw_product_id)->value('name');
+                            $rawProduct = RawProduct::findOrFail($item->raw_product_id);
+                            $names[] = $rawProduct->name;
                         }
-
                         if (empty($names)) return false;
 
                         return $names;

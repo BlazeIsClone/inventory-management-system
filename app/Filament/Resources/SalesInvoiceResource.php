@@ -78,7 +78,6 @@ class SalesInvoiceResource extends Resource
                                         $set('finish_product_price', $get('finish_product_quantity') * $finishProduct->sales_price);
                                     }
                                 })->required(),
-                            Forms\Components\Hidden::make('finish_product_id'),
                             Forms\Components\TextInput::make('finish_product_quantity')
                                 ->numeric()
                                 ->minValue(1)
@@ -94,7 +93,6 @@ class SalesInvoiceResource extends Resource
                                 })->required(),
                             Forms\Components\TextInput::make('finish_product_price')
                                 ->reactive()
-                                ->disabled()
                                 ->columnSpan(2)
                                 ->required(),
                         ]),
