@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\TotalSalesOverview;
 use App\Models\FinishProduct;
 use Filament\Pages\Page;
 use App\Models\SalesInvoice;
@@ -24,7 +25,6 @@ class TotalSales extends Page implements HasTable
     protected static string $view = 'filament.pages.total-sales';
 
     protected static ?int $navigationSort = 0;
-
 
     protected function getTableQuery(): Builder
     {
@@ -63,6 +63,13 @@ class TotalSales extends Page implements HasTable
 
                     return $finishProductsSold;
                 }),
+        ];
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
+            TotalSalesOverview::class,
         ];
     }
 }

@@ -69,7 +69,7 @@ class SalesInvoiceResource extends Resource
                                 ->searchable()
                                 ->preload()
                                 ->reactive()
-                                ->columnSpan(3)
+                                ->columnSpan(2)
                                 ->afterStateUpdated(function (Closure $set, $state, Closure $get) {
                                     $finishProduct = FinishProduct::find($state);
                                     $set('finish_product_id', $state);
@@ -79,21 +79,42 @@ class SalesInvoiceResource extends Resource
                                     }
                                 })->required(),
                             Forms\Components\TextInput::make('finish_product_quantity')
+                                ->label('Qunatity')
                                 ->numeric()
                                 ->minValue(1)
                                 ->default(1)
                                 ->reactive()
                                 ->columnSpan(1)
                                 ->afterStateUpdated(function (Closure $get, Closure $set) {
-                                    $finishProduct = FinishProduct::find($get('product_id') || $get('finish_product_id'));
+                                    $finishProduct = FinishProduct::find($get('finish_product_id'));
 
-                                    if ($finishProduct) {
+                                    if (!$get('finish_product_quantity')) return;
+
+                                    if ($get('finish_product_unit_price')) {
+                                        $set('finish_product_price', $get('finish_product_quantity') * $get('finish_product_unit_price'));
+                                    } elseif ($finishProduct) {
                                         $set('finish_product_price', $get('finish_product_quantity') * $finishProduct->sales_price);
                                     }
                                 })->required(),
-                            Forms\Components\TextInput::make('finish_product_price')
+                            Forms\Components\TextInput::make('finish_product_unit_price')
+                                ->label('Unit Price')
+                                ->numeric()
+                                ->minValue(1)
                                 ->reactive()
                                 ->columnSpan(2)
+                                ->afterStateUpdated(function (Closure $get, Closure $set, $state) {
+                                    $finishProduct = FinishProduct::find($get('finish_product_id'));
+
+                                    if ($finishProduct) {
+                                        $set('finish_product_price', $get('finish_product_quantity') * $state);
+                                    }
+                                })->required(),
+
+                            Forms\Components\TextInput::make('finish_product_price')
+                                ->label('Total')
+                                ->reactive()
+                                ->columnSpan(1)
+                                ->disabled()
                                 ->required(),
                         ]),
                 ]),

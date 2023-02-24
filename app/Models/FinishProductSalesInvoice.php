@@ -18,6 +18,7 @@ class FinishProductSalesInvoice extends Model
         'finish_product_id',
         'sales_invoice_id',
         'finish_product_quantity',
+        'finish_product_unit_price',
         'finish_product_price',
     ];
 }
