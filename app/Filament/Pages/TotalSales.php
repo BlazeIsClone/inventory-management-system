@@ -66,7 +66,7 @@ class TotalSales extends Page implements HasTable
         ];
     }
 
-    protected function getFooterWidgets(): array
+    protected function getHeaderWidgets(): array
     {
         return [
             TotalSalesOverview::class,

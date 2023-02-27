@@ -34,14 +34,14 @@ class MaterialInventory extends Page implements HasTable
     {
         return [
             Tables\Columns\TextColumn::make('name'),
-            Tables\Columns\TextColumn::make('total_purchased')
+            Tables\Columns\TextColumn::make('purchased_quantity')
                 ->getStateUsing(function (Model $record) {
                     //PurchaseBill::where
                 }),
-            Tables\Columns\TextColumn::make('total_used'),
+            Tables\Columns\TextColumn::make('used_qantity'),
             Tables\Columns\TextColumn::make('balance'),
             Tables\Columns\TextColumn::make('avarage_cost'),
-            Tables\Columns\TextColumn::make('total'),
+            Tables\Columns\TextColumn::make('stock_value'),
         ];
     }
 }
