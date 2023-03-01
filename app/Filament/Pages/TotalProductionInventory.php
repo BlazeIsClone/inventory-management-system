@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\TotalProductionInventoryOverview;
 use App\Models\FinishProduct;
 use App\Models\Production;
 use App\Models\SalesInvoice;
@@ -12,108 +13,146 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class TotalProductionInventory extends Page implements HasTable
 {
-    use InteractsWithTable;
+	use InteractsWithTable;
 
-    protected static ?string $navigationIcon = 'heroicon-o-inbox';
+	protected static ?string $navigationIcon = 'heroicon-o-inbox';
 
-    protected static ?string $navigationGroup = 'Records';
+	protected static ?string $navigationGroup = 'Records';
 
-    protected static ?string $title = 'Total Production Inventory';
+	protected static ?string $title = 'Total Production Inventory';
 
-    protected static string $view = 'filament.pages.total-production-inventory';
+	protected static string $view = 'filament.pages.total-production-inventory';
 
-    protected static ?int $navigationSort = 3;
+	protected static ?int $navigationSort = 3;
 
-    protected function getTableQuery(): Builder
-    {
-        return FinishProduct::query();
-    }
+	protected $allTotalValue = 0;
+	protected $broughtForward = 0;
+	protected $totalProduced = 0;
+	protected $totalSold = 0;
+	protected $balance = 0;
+	protected $averageCost = 0;
 
-    protected function getTableColumns(): array
-    {
-        return [
-            Tables\Columns\TextColumn::make('name'),
-            Tables\Columns\TextColumn::make('brought_forward')
-                ->getStateUsing(function (Model $record) {
+	protected function getTableQuery(): Builder
+	{
+		return FinishProduct::query();
+	}
 
-                    $broughtForward = 0;
-                    $currentMonthProductions = 0;
+	protected function getTableColumns(): array
+	{
+		$schema = [
+			Tables\Columns\TextColumn::make('name'),
+			Tables\Columns\TextColumn::make('brought_forward')
+				->getStateUsing(function (Model $record) {
 
-                    $productions = Production::all()->where(
-                        'created_at',
-                        '>=',
-                        Carbon::now()->startOfMonth()->toDateString()
-                    );
+					$broughtForward = 0;
+					$currentMonthProductions = 0;
 
-                    $finishProducts = FinishProduct::all()->where(
-                        'created_at',
-                        '<=',
-                        Carbon::now()->subMonth()->endOfMonth()->toDateString()
-                    );
+					$productions = Production::all()->where(
+						'created_at',
+						'>=',
+						Carbon::now()->startOfMonth()->toDateString()
+					);
 
-                    foreach ($productions as $production) {
-                        if ($record->id === $production->finish_product_id) {
-                            $currentMonthProductions += $production->quantity;
-                        }
-                    }
+					$finishProducts = FinishProduct::all()->where(
+						'created_at',
+						'<=',
+						Carbon::now()->subMonth()->endOfMonth()->toDateString()
+					);
 
-                    if ($finishProducts->isNotEmpty()) {
-                        foreach ($finishProducts as $finishProduct) {
-                            if ($record->id === $finishProduct->id) {
-                                $broughtForward += ($finishProduct->available_quantity + $currentMonthProductions);
-                            }
-                        }
-                    } else {
-                        $broughtForward += $currentMonthProductions;
-                    }
+					foreach ($productions as $production) {
+						if ($record->id === $production->finish_product_id) {
+							$currentMonthProductions += $production->quantity;
+						}
+					}
 
-                    return $broughtForward;
-                }),
-            Tables\Columns\TextColumn::make('total_produced')
-                ->getStateUsing(function (Model $record) {
+					if ($finishProducts->isNotEmpty()) {
+						foreach ($finishProducts as $finishProduct) {
+							if ($record->id === $finishProduct->id) {
+								$broughtForward += ($finishProduct->available_quantity + $currentMonthProductions);
+							}
+						}
+					} else {
+						$broughtForward += $currentMonthProductions;
+					}
 
-                    $totalQuantity = 0;
+					$this->broughtForward = $broughtForward;
 
-                    $productions = Production::all()->where(
-                        'created_at',
-                        '>=',
-                        Carbon::now()->startOfMonth()->toDateString()
-                    );
+					return $broughtForward;
+				}),
+			Tables\Columns\TextColumn::make('total_produced')
+				->getStateUsing(function (Model $record) {
+					$totalProduced = 0;
 
-                    foreach ($productions as $production) {
-                        if ($record->id === $production->finish_product_id) {
-                            $totalQuantity += $production->quantity;
-                        }
-                    }
+					$productions = Production::all()->where(
+						'created_at',
+						'>=',
+						Carbon::now()->startOfMonth()->toDateString()
+					);
 
-                    return $totalQuantity;
-                }),
+					foreach ($productions as $production) {
+						if ($record->id === $production->finish_product_id) {
+							$totalProduced += $production->quantity;
+						}
+					}
 
-            Tables\Columns\TextColumn::make('total_sold')
-                ->getStateUsing(function (Model $record) {
+					$this->totalProduced = $totalProduced;
 
-                    $totalQuantity = 0;
+					return $totalProduced;
+				}),
 
-                    $productions = SalesInvoice::all();
+			Tables\Columns\TextColumn::make('total_sold')
+				->getStateUsing(function (Model $record) {
+					$totalSold = 0;
+					$productions = SalesInvoice::all();
 
-                    foreach ($productions as $production) {
-                        foreach ($production->finishProductSalesInvoice as $pivot) {
-                            if ($record->id === $pivot->finish_product_id) {
-                                $totalQuantity += $pivot->finish_product_quantity;
-                            }
-                        }
-                    }
+					foreach ($productions as $production) {
+						foreach ($production->finishProductSalesInvoice as $pivot) {
+							if ($record->id === $pivot->finish_product_id) {
+								$totalSold += $pivot->finish_product_quantity;
+							}
+						}
+					}
 
-                    return $totalQuantity;
-                }),
+					$this->totalSold = $totalSold;
 
+					return $totalSold;
+				}),
+			Tables\Columns\TextColumn::make('balance')
+				->getStateUsing(function () {
+					$balance = ($this->broughtForward + $this->totalProduced) - $this->totalSold;
+					$this->balance = $balance;
 
-            Tables\Columns\TextColumn::make('balance'),
-            Tables\Columns\TextColumn::make('average_cost'),
-            Tables\Columns\TextColumn::make('total'),
-        ];
-    }
+					return $balance;
+				}),
+			Tables\Columns\TextColumn::make('average_cost')
+				->getStateUsing(function (Model $record) {
+					$averageCost = $record->sales_price;
+					$this->averageCost = $averageCost;
+
+					return $averageCost;
+				}),
+			Tables\Columns\TextColumn::make('total_value')
+				->getStateUsing(function () {
+					$totalValue = $this->balance * $this->averageCost;
+
+					return $totalValue;
+				}),
+		];
+
+		// Unsafe
+		Session::put('allTotalValue', 0);
+
+		return $schema;
+	}
+
+	protected function getHeaderWidgets(): array
+	{
+		return [
+			TotalProductionInventoryOverview::class,
+		];
+	}
 }
