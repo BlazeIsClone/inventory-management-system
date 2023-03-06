@@ -43,8 +43,11 @@ class TotalProductionInventory extends Page implements HasTable
 
 	protected function getTableColumns(): array
 	{
+		$GLOBALS['productionInventoryValue'] = 0;
+
 		$schema = [
-			Tables\Columns\TextColumn::make('name'),
+			Tables\Columns\TextColumn::make('name')
+				->searchable(),
 			Tables\Columns\TextColumn::make('brought_forward')
 				->getStateUsing(function (Model $record) {
 
@@ -139,12 +142,12 @@ class TotalProductionInventory extends Page implements HasTable
 				->getStateUsing(function () {
 					$totalValue = $this->balance * $this->averageCost;
 
+					// Set global value for widgets
+					$GLOBALS['productionInventoryValue'] += $totalValue;
+
 					return $totalValue;
 				}),
 		];
-
-		// Unsafe
-		Session::put('allTotalValue', 0);
 
 		return $schema;
 	}

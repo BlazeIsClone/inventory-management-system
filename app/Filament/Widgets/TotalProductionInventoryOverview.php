@@ -11,11 +11,12 @@ class TotalProductionInventoryOverview extends BaseWidget
 {
 	public ?Model $record = null;
 
+	protected static ?string $pollingInterval = null;
+
 	protected function getCards(): array
 	{
-		//dd(Session::get('allTotalValue'));
 		return [
-			Card::make('Total Saels Amount',  Session::get('allTotalValue'))
+			Card::make('Total Sales Amount',  number_format($GLOBALS['productionInventoryValue']) ?? 0)
 				->icon('heroicon-o-cash'),
 		];
 	}
