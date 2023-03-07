@@ -39,6 +39,17 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="filament-tables-cell dark:text-white filament-table-cell-name">
+                            <div class="filament-tables-column-wrapper">
+                                <div class="filament-tables-text-column px-4 py-3">
+                                    <div class="inline-flex items-center space-x-1 rtl:space-x-reverse">
+                                        <span class="">
+                                            0
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
 
                     <tr class="filament-tables-row transition">
@@ -48,6 +59,17 @@
                                     <div class="inline-flex items-center space-x-1 rtl:space-x-reverse">
                                         <span class="">
                                             Total Sales
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="filament-tables-cell dark:text-white filament-table-cell-name">
+                            <div class="filament-tables-column-wrapper">
+                                <div class="filament-tables-text-column px-4 py-3">
+                                    <div class="inline-flex items-center space-x-1 rtl:space-x-reverse">
+                                        <span class="">
+                                            0
                                         </span>
                                     </div>
                                 </div>
@@ -67,6 +89,17 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="filament-tables-cell dark:text-white filament-table-cell-name">
+                            <div class="filament-tables-column-wrapper">
+                                <div class="filament-tables-text-column px-4 py-3">
+                                    <div class="inline-flex items-center space-x-1 rtl:space-x-reverse">
+                                        <span class="">
+                                            0
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
 
                     <tr class="filament-tables-row transition">
@@ -81,6 +114,17 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="filament-tables-cell dark:text-white filament-table-cell-name">
+                            <div class="filament-tables-column-wrapper">
+                                <div class="filament-tables-text-column px-4 py-3">
+                                    <div class="inline-flex items-center space-x-1 rtl:space-x-reverse">
+                                        <span class="">
+                                            0
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
 
                 </tbody>
@@ -88,7 +132,6 @@
             </table>
         </div>
 
-        </nav>
     </div>
 
 

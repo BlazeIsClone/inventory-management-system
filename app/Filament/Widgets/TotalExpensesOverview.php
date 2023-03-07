@@ -6,7 +6,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
 use Illuminate\Database\Eloquent\Model;
 
-class TotalProductionInventoryOverview extends BaseWidget
+class TotalExpensesOverview extends BaseWidget
 {
 	public ?Model $record = null;
 
@@ -15,7 +15,7 @@ class TotalProductionInventoryOverview extends BaseWidget
 	protected function getCards(): array
 	{
 		return [
-			Card::make('Total Sales Amount',  number_format($GLOBALS['productionInventoryValue']) ?? 0)
+			Card::make('Total Monthly Expenses',  number_format($GLOBALS['expensesAmount']) ?? 0)
 				->icon('heroicon-o-cash'),
 		];
 	}

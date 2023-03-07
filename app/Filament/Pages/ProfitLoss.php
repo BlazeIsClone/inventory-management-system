@@ -21,7 +21,7 @@ class ProfitLoss extends Page implements HasTable
 
     protected static string $view = 'filament.pages.profit-loss';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 5;
 
     protected function getTableQuery(): Builder
     {

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\TotalProductionInventoryOverview;
 use Filament\Pages\Page;
 
 class Dashboard extends Page
@@ -29,6 +30,12 @@ class Dashboard extends Page
 
     protected function getTitle(): string
     {
-        return static::$title ?? __('filament::pages/dashboard.title');
+        return static::$title ?? 'Welcome To The Inventory Manager!';
+    }
+
+
+    protected function getViewData(): array
+    {
+        return ['test' => number_format($GLOBALS['productionInventoryValue'] ?? 0)];
     }
 }

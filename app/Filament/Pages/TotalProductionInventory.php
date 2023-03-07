@@ -47,8 +47,10 @@ class TotalProductionInventory extends Page implements HasTable
 
 		$schema = [
 			Tables\Columns\TextColumn::make('name')
+				->label('Finish Product')
 				->searchable(),
 			Tables\Columns\TextColumn::make('brought_forward')
+				->label('Brought Forward Qty')
 				->getStateUsing(function (Model $record) {
 
 					$broughtForward = 0;
@@ -84,9 +86,11 @@ class TotalProductionInventory extends Page implements HasTable
 
 					$this->broughtForward = $broughtForward;
 
+
 					return $broughtForward;
 				}),
 			Tables\Columns\TextColumn::make('total_produced')
+				->label('Total Produced Qty')
 				->getStateUsing(function (Model $record) {
 					$totalProduced = 0;
 
@@ -108,6 +112,7 @@ class TotalProductionInventory extends Page implements HasTable
 				}),
 
 			Tables\Columns\TextColumn::make('total_sold')
+				->label('Total Sold Qty')
 				->getStateUsing(function (Model $record) {
 					$totalSold = 0;
 					$productions = SalesInvoice::all();
@@ -125,6 +130,7 @@ class TotalProductionInventory extends Page implements HasTable
 					return $totalSold;
 				}),
 			Tables\Columns\TextColumn::make('balance')
+				->label('Total Balance Qty')
 				->getStateUsing(function () {
 					$balance = ($this->broughtForward + $this->totalProduced) - $this->totalSold;
 					$this->balance = $balance;
@@ -132,20 +138,22 @@ class TotalProductionInventory extends Page implements HasTable
 					return $balance;
 				}),
 			Tables\Columns\TextColumn::make('average_cost')
+				->label('Average Cost')
 				->getStateUsing(function (Model $record) {
 					$averageCost = $record->sales_price;
 					$this->averageCost = $averageCost;
 
-					return $averageCost;
+					return number_format($averageCost);
 				}),
 			Tables\Columns\TextColumn::make('total_value')
+				->label('Total Value')
 				->getStateUsing(function () {
 					$totalValue = $this->balance * $this->averageCost;
 
 					// Set global value for widgets
 					$GLOBALS['productionInventoryValue'] += $totalValue;
 
-					return $totalValue;
+					return number_format($totalValue);
 				}),
 		];
 

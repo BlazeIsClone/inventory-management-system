@@ -35,8 +35,10 @@ class TotalSales extends Page implements HasTable
     {
         return [
             Tables\Columns\TextColumn::make('name')
+                ->label('Finish Product')
                 ->searchable(),
             Tables\Columns\TextColumn::make('total_sold')
+                ->label('Total Sold Qty')
                 ->getStateUsing(function (Model $record) {
                     $finishProductsSold = 0;
                     $salesInvoices = SalesInvoice::all();
@@ -50,6 +52,7 @@ class TotalSales extends Page implements HasTable
                     return $finishProductsSold;
                 }),
             Tables\Columns\TextColumn::make('sales_amount')
+                ->label('Sales Amount')
                 ->getStateUsing(function (Model $record) {
                     $finishProductsSold = 0;
                     $salesInvoices = SalesInvoice::all();
@@ -61,7 +64,7 @@ class TotalSales extends Page implements HasTable
                         }
                     }
 
-                    return $finishProductsSold;
+                    return number_format($finishProductsSold);
                 }),
         ];
     }

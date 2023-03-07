@@ -49,6 +49,7 @@ class ExpenseResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('date')
+                    ->date()
                     ->sortable(),
                 Tables\Columns\BadgeColumn::make('expenseCategory.name'),
                 Tables\Columns\TextColumn::make('amount')
