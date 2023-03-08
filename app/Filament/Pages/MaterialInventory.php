@@ -30,6 +30,7 @@ class MaterialInventory extends Page implements HasTable
     protected static ?int $navigationSort = 2;
 
     private $purchasedQuantity = 0;
+    private $usedQuantity = 0;
 
 
     protected function getTableQuery(): Builder
@@ -99,10 +100,15 @@ class MaterialInventory extends Page implements HasTable
                         }
                     }
 
+                    $this->usedQuantity = $usedQuantity;
+
                     return $usedQuantity;
                 }),
             Tables\Columns\TextColumn::make('balance')
-                ->label('Balance Qty'),
+                ->label('Balance Qty')
+                ->getStateUsing(function (Model $record) {
+                    return $this->purchasedQuantity - $this->usedQuantity;
+                }),
             Tables\Columns\TextColumn::make('average_cost')
                 ->label('Average Cost'),
             Tables\Columns\TextColumn::make('stock_value')
