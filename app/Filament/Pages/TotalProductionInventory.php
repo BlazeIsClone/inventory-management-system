@@ -13,7 +13,6 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Session;
 
 class TotalProductionInventory extends Page implements HasTable
 {
@@ -30,10 +29,15 @@ class TotalProductionInventory extends Page implements HasTable
 	protected static ?int $navigationSort = 3;
 
 	protected $allTotalValue = 0;
+
 	protected $broughtForward = 0;
+
 	protected $totalProduced = 0;
+
 	protected $totalSold = 0;
+
 	protected $balance = 0;
+
 	protected $averageCost = 0;
 
 	protected function getTableQuery(): Builder
@@ -52,40 +56,21 @@ class TotalProductionInventory extends Page implements HasTable
 			Tables\Columns\TextColumn::make('brought_forward')
 				->label('Brought Forward Qty')
 				->getStateUsing(function (Model $record) {
-
 					$broughtForward = 0;
-					$currentMonthProductions = 0;
 
 					$productions = Production::all()->where(
-						'created_at',
-						'>=',
-						Carbon::now()->startOfMonth()->toDateString()
-					);
-
-					$finishProducts = FinishProduct::all()->where(
-						'created_at',
+						'date',
 						'<=',
-						Carbon::now()->subMonth()->endOfMonth()->toDateString()
+						Carbon::now()->startOfMonth()->toDateString()
 					);
 
 					foreach ($productions as $production) {
 						if ($record->id === $production->finish_product_id) {
-							$currentMonthProductions += $production->quantity;
+							$broughtForward = $production->quantity;
 						}
-					}
-
-					if ($finishProducts->isNotEmpty()) {
-						foreach ($finishProducts as $finishProduct) {
-							if ($record->id === $finishProduct->id) {
-								$broughtForward += ($finishProduct->available_quantity + $currentMonthProductions);
-							}
-						}
-					} else {
-						$broughtForward += $currentMonthProductions;
 					}
 
 					$this->broughtForward = $broughtForward;
-
 
 					return $broughtForward;
 				}),
@@ -95,7 +80,7 @@ class TotalProductionInventory extends Page implements HasTable
 					$totalProduced = 0;
 
 					$productions = Production::all()->where(
-						'created_at',
+						'date',
 						'>=',
 						Carbon::now()->startOfMonth()->toDateString()
 					);
@@ -140,7 +125,26 @@ class TotalProductionInventory extends Page implements HasTable
 			Tables\Columns\TextColumn::make('average_cost')
 				->label('Average Cost')
 				->getStateUsing(function (Model $record) {
-					$averageCost = $record->sales_price;
+					$finishProductSalesPrices = [];
+
+					$productions = Production::all()->where(
+						'date',
+						'>=',
+						Carbon::now()->startOfMonth()->toDateString()
+					);
+
+					foreach ($productions as $production) {
+						if ($record->id === $production->finish_product_id) {
+							$finishProductSalesPrices[] = $production->finish_product_sales_price;
+						}
+					}
+
+					if ($finishProductSalesPrices) {
+						$averageCost = array_sum($finishProductSalesPrices) / count($finishProductSalesPrices);
+					} else {
+						$averageCost = 0;
+					}
+
 					$this->averageCost = $averageCost;
 
 					return number_format($averageCost);

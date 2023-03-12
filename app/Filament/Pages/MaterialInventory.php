@@ -30,7 +30,12 @@ class MaterialInventory extends Page implements HasTable
     protected static ?int $navigationSort = 2;
 
     private $purchasedQuantity = 0;
+
     private $usedQuantity = 0;
+
+    private $balanceQuantity = 0;
+
+    private $averageCost = 0;
 
 
     protected function getTableQuery(): Builder
@@ -50,9 +55,9 @@ class MaterialInventory extends Page implements HasTable
                     $purchasedQuantity = 0;
 
                     $purchaseBills = PurchaseBill::all()->where(
-                        'created_at',
+                        'purchase_date',
                         '>=',
-                        Carbon::now()->subMonth()->endOfMonth()->toDateString()
+                        Carbon::now()->startOfMonth()->toDateString()
                     );
 
                     foreach ($purchaseBills as $purchaseBill) {
@@ -71,20 +76,19 @@ class MaterialInventory extends Page implements HasTable
                 ->label('Used Qty')
                 ->getStateUsing(function (Model $record) {
                     $usedQuantity = 0;
+                    $finishProductQuantity = 0;
 
                     $finishProducts = FinishProduct::all()->where(
                         'created_at',
                         '>=',
-                        Carbon::now()->subMonth()->endOfMonth()->toDateString()
+                        Carbon::now()->startOfMonth()->toDateString()
                     );
 
                     $salesInvoices = SalesInvoice::all()->where(
-                        'created_at',
+                        'date',
                         '>=',
-                        Carbon::now()->subMonth()->endOfMonth()->toDateString()
+                        Carbon::now()->startOfMonth()->toDateString()
                     );
-
-                    $finishProductQuantity = 0;
 
                     foreach ($salesInvoices as $salesInvoice) {
                         foreach ($salesInvoice->finishProductSalesInvoice as $pivot) {
@@ -106,13 +110,48 @@ class MaterialInventory extends Page implements HasTable
                 }),
             Tables\Columns\TextColumn::make('balance')
                 ->label('Balance Qty')
-                ->getStateUsing(function (Model $record) {
-                    return $this->purchasedQuantity - $this->usedQuantity;
+                ->getStateUsing(function () {
+                    $balanceQuantity =  $this->purchasedQuantity - $this->usedQuantity;
+
+                    $this->balanceQuantity = $balanceQuantity;
+
+                    return $balanceQuantity;
                 }),
             Tables\Columns\TextColumn::make('average_cost')
-                ->label('Average Cost'),
+                ->label('Average Price')
+                ->getStateUsing(function (Model $record) {
+                    $averageCost = 0;
+                    $rawProductPrices = [];
+
+                    $purchaseBills = PurchaseBill::all()->where(
+                        'purchase_date',
+                        '>=',
+                        Carbon::now()->startOfMonth()->toDateString()
+                    );
+
+                    foreach ($purchaseBills as $purchaseBill) {
+                        foreach ($purchaseBill->purchaseBillRawProducts as $pivot) {
+                            if ($record->id === $pivot->raw_product_id) {
+                                $rawProductPrices[] = $pivot->product_price;
+                            }
+                        }
+                    }
+
+                    if ($rawProductPrices) {
+                        $averageCost = array_sum($rawProductPrices) / count($rawProductPrices);
+                    } else {
+                        $averageCost = 0;
+                    }
+
+                    $this->averageCost = $averageCost;
+
+                    return number_format($averageCost);
+                }),
             Tables\Columns\TextColumn::make('stock_value')
-                ->label('Stock Value'),
+                ->label('Stock Value')
+                ->getStateUsing(function () {
+                    return number_format($this->balanceQuantity * $this->averageCost);
+                }),
         ];
     }
 

@@ -11,17 +11,24 @@ class TotalSalesOverview extends BaseWidget
 {
 	public ?Model $record = null;
 
+	protected static ?string $pollingInterval = null;
+
 	protected function getCards(): array
 	{
+		$salesInvoices = SalesInvoice::all();
+
 		$quantity = 0;
 		$salesAmount = 0;
-		$salesInvoices = SalesInvoice::all();
+
 		foreach ($salesInvoices as $salesInvoice) {
 			foreach ($salesInvoice->finishProductSalesInvoice as $pivot) {
 				$quantity += $pivot->finish_product_quantity;
 				$salesAmount += $pivot->finish_product_quantity * $pivot->finish_product_price;
 			}
 		}
+
+		// Set global value for widgets
+		$GLOBALS['totalSalesValue'] = $salesAmount;
 
 		return [
 			Card::make('Total Quantity Sold', $quantity)

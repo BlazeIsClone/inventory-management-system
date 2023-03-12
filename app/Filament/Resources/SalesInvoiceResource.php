@@ -76,6 +76,7 @@ class SalesInvoiceResource extends Resource
 
                                     if ($finishProduct) {
                                         $set('finish_product_price', $get('finish_product_quantity') * $finishProduct->sales_price);
+                                        $set('finish_product_unit_price', $finishProduct->sales_price);
                                     }
                                 })->required(),
                             Forms\Components\TextInput::make('finish_product_quantity')
@@ -108,8 +109,7 @@ class SalesInvoiceResource extends Resource
                                     if ($finishProduct) {
                                         $set('finish_product_price', $get('finish_product_quantity') * $state);
                                     }
-                                })->required(),
-
+                                }),
                             Forms\Components\TextInput::make('finish_product_price')
                                 ->label('Total')
                                 ->reactive()

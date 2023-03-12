@@ -3,7 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductionResource\Pages;
+use App\Models\FinishProduct;
 use App\Models\Production;
+use Closure;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -32,13 +34,25 @@ class ProductionResource extends Resource
                         ->relationship('finishProduct', 'name')
                         ->searchable()
                         ->preload()
-                        ->required(),
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(function ($state, Closure $set) {
+                            $finishProduct = FinishProduct::find($state);
+
+                            if ($finishProduct) {
+                                $set('finish_product_sales_price', $finishProduct->sales_price);
+                            }
+                        }),
                     Forms\Components\TextInput::make('quantity')
                         ->disabledOn(Pages\EditProduction::class)
                         ->numeric()
                         ->minValue(1)
                         ->required(),
-                ])
+                    Forms\Components\TextInput::make('finish_product_sales_price')
+                        ->label('Current Finish Product Sales Price')
+                        ->disabled()
+                        ->numeric(),
+                ]),
             ]);
     }
 

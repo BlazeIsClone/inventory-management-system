@@ -18,6 +18,7 @@ class Production extends Model
     protected $fillable = [
         'date',
         'finish_product_id',
+        'finish_product_sales_price',
         'quantity',
     ];
 
